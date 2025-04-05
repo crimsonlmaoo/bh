@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Suggest!</title>
+    <link rel="stylesheet" href="suggest.css">
+    <link
+      href="https://fonts.googleapis.com/css2?family=Lexend:wght@700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+        body {
+            font-family: 'Lexend', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-size: cover;
+            background-position: center;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            animation: fadeIn 1s forwards;
+            background: black;
+            color: white;
+        }
+
+        @keyframes fadeIn {
+            to {
+                opacity: 1;
+            }
+        }
+
+        .form-container {
+            background-color: rgba(68, 68, 68, 0.5);
+            backdrop-filter: blur(6px);
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+            width: 300px;
+        }
+
+        input, textarea {
+            width: 100%;
+            margin: 10px 0;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            background-color: rgba(255, 255, 255, 0.1);
+            color: white;
+        }
+
+        button, .back-button {
+            background-color: red;
+            color: white;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            width: 100%;
+            margin-top: 10px;
+        }
+
+        button:hover, .back-button:hover {
+            background-color: black;
+        }
+
+        #responseMessage {
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="form-container">
+        <h2>Suggestion Form</h2>
+        <input type="text" id="name" placeholder="Your Name" required>
+        <textarea id="suggestion" rows="4" placeholder="Your Suggestion" required></textarea>
+        <button id="submitSuggestion">Submit Suggestion</button>
+        <p id="responseMessage"></p>
+        <a href="homepage.html" class="back-button">Back</a>
+    </div>
+
+<script type="text/javascript"
+        src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js">
+</script>
+<script type="text/javascript">
+   (function(){
+      emailjs.init({
+        publicKey: "jfz6ZoVefk0iM1zbY",
+      });
+   })();
+
+        const submitButton = document.getElementById('submitSuggestion');
+        const nameInput = document.getElementById('name');
+        const suggestionInput = document.getElementById('suggestion');
+        const responseMessage = document.getElementById('responseMessage');
+
+        submitButton.addEventListener('click', function(event) {
+            event.preventDefault();
+            const name = nameInput.value;
+            const suggestion = suggestionInput.value;
+
+            const templateParams = {
+                from_name: name,
+                suggestion: suggestion,
+            };
+
+            emailjs.send ('service_0hxbt3j', 'template_q5jcytj', templateParams)
+                .then(function(response) {
+                    console.log('SUCCESS!', response.status, response.text);
+                    responseMessage.textContent = "Your suggestion has been sent!";
+                    responseMessage.style.color = "green";
+                    nameInput.value = '';
+                    suggestionInput.value = '';
+                }, function(error) {
+                    console.log('FAILED...', error);
+                    responseMessage.textContent = "Failed to send suggestion. Please try again.";
+                    responseMessage.style.color = "red";
+                });
+        });
+    </script>
+</body>
+</html>
